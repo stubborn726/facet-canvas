@@ -1,0 +1,20 @@
+{
+  "name": "facet-canvas",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Facet Canvas — 多维关系画布：多栏节点 × 连线的结构化关系确认画布（多画布 / 多人共享 / 带版本 / 零依赖）",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test/docs-consistency.js && node test/smoke.js",
+    "test:docs": "node test/docs-consistency.js",
+    "test:smoke": "node test/smoke.js",
+    "backup": "node backup.js",
+    "verify": "node verify.js"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

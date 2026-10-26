@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多维关系画布</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <h1>多维关系画布</h1>
+  <span class="canvas-pick" id="canvas-pick" title="切换画布 / 新建 / 重命名 / 删除">
+    画布：<b id="canvas-name">—</b><span class="caret">▾</span>
+  </span>
+  <span class="who userchip" id="userchip" title="账号：修改我的密码 / 用户管理 / 退出登录">操作人 <b id="whoami">—</b><span class="caret">▾</span></span>
+  <span class="netline" id="netline" title="当前访问 IP"></span>
+  <span class="clock" id="clock" title="本机时间（版本记录里的时间是服务器时间）"></span>
+  <button class="hdrbtn" id="btn-users" style="display:none" title="用户管理（仅管理员）">用户管理</button>
+  <button class="hdrbtn" id="btn-logout" title="退出登录 / 换一个账号">退出</button>
+</div>
+<div class="extbar" id="extbar"></div>
+
+<div class="bar">
+  <button class="btn" id="btn-edit">编辑模式：关</button>
+  <button class="btn ghost" id="btn-addcol" disabled>＋ 栏目</button>
+  <button class="btn ghost" id="btn-lock" title="锁定画布：冻结滚轮缩放/平移、空格平移、拖动节点/栏目、框选，防止看的时候误操作（点选、右键菜单与顶部缩放仍可用）">锁定画布</button>
+  <button class="btn ghost" id="btn-help" title="使用说明 / 图例 / 快捷键">? 使用说明</button>
+  <button class="btn ghost" id="btn-edges" title="选中一个节点后，在下方显示它的连线摘要（默认关：选中节点不再自动弹出连线列表）">🔗 连线 ▾</button>
+  <button class="btn ghost" id="btn-tags" title="按标签筛选：点某个标签，全画布只亮带它的节点（其余置灰）">🏷 标签</button>
+  <button class="btn ghost" id="btn-set" title="设置：标签类型 / 样式（栏目、节点、选中、链路、连线）">⚙ 设置 ▾</button>
+  <span class="sp"></span>
+  <span class="dirty" id="dirty"></span>
+  <button class="btn primary" id="btn-save" disabled>保存</button>
+  <button class="btn ghost" id="btn-export" title="导出：图片（PNG）/ 链路表（CSV）">导出 ▾</button>
+  <button class="btn ghost" id="btn-vers">版本历史</button>
+  <label><input type="checkbox" id="chk-all" checked> 显示待确认 <b id="pend-count" style="color:var(--warn)"></b></label>
+  <label><input type="checkbox" id="chk-notes"> 显示备注 <b id="note-count" style="color:var(--ink2)"></b></label>
+  <button class="btn ghost" id="btn-refresh">刷新</button>
+  <span class="zoomgrp">
+    <button class="btn ghost" id="btn-zoomout" title="缩小">－</button>
+    <button class="btn ghost" id="btn-zoomreset" title="重置为 100%">100%</button>
+    <button class="btn ghost" id="btn-zoomin" title="放大">＋</button>
+    <button class="btn ghost" id="btn-fit" title="自适应：回到刚打开的视图（100% 缩放 + 顶部/左侧对齐）">自适应</button>
+  </span>
+  <span class="muted" id="rev"></span>
+</div>
+<div class="legendwrap" style="padding:0 14px;">
+  <div class="hint-bar" id="hint"></div>
+  <div class="edgebar" id="edgebar"></div>
+  <div class="tagbar" id="tagbar"></div>
+</div>
+
+<div class="wrap"><div class="graph" id="graph"><svg id="edges"></svg></div></div>
+<input type="file" id="file" accept="image/*" style="display:none">
+<div class="ctxmenu" id="ctxmenu"></div>
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay"><div class="dialog" id="dialog"></div></div>
+
+<div class="overlay" id="gate"><div class="dialog">
+  <h3>多维关系画布 · 登录</h3>
+  <form class="body" id="gate-form">
+    <label>用户名</label><input type="text" id="gate-user" placeholder="用户名" autocomplete="username">
+    <label style="margin-top:10px;">密码</label><input type="password" id="gate-pw" autocomplete="current-password">
+  </form>
+  <div class="foot"><span class="muted sp" id="gate-msg">请输入用户名与密码</span><button class="btn" id="gate-ok" type="button">登录</button></div>
+</div></div>
+
+<script src="app.js"></script>
+</body>
+</html>

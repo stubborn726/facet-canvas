@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    env:
+      # Node 22.x 的 node:sqlite 需要显式开关；24+ 已不需要
+      NODE_OPTIONS: ${{ matrix.node == 22 && '--experimental-sqlite' || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node --version
+      - name: 文档一致性（口令 / 版本号 / 链接）
+        run: npm run test:docs
+      - name: 冒烟测试（零依赖，不需要 npm install）
+        run: npm run test:smoke

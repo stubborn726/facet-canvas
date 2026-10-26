@@ -1,0 +1,22 @@
+# 运行时数据（库 + 图片）统一在 data/ 下
+data/
+# 迁移前的老位置也一并忽略，避免误提交业务数据
+data.db
+*.db-journal
+*.db-wal
+uploads/
+node_modules/
+# 离线 IP 归属地数据（约 11MB，按 vendor/README.md 自行下载）
+vendor/*.xdb
+# 编辑器 / 系统
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 数据体检基线（临时文件，别提交）
+before.json
+after.json
+升级前.json
