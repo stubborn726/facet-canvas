@@ -115,6 +115,10 @@ body{font-family:'Microsoft YaHei','微软雅黑',sans-serif;background:var(--bg
 .muted{color:var(--ink2);font-size:11px;}
 .help .hrow{font-size:12px;line-height:1.95;}
 .help .hrow .k{display:inline-block;min-width:64px;color:var(--ink2);vertical-align:top;}
+.topbar .iconbtn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:24px;flex:none;
+  border-radius:var(--radius);color:#fff;text-decoration:none;opacity:.8;transition:background .15s,opacity .15s;}
+.topbar .iconbtn:hover{background:rgba(255,255,255,.16);opacity:1;}
+.topbar .iconbtn svg{display:block;}
 .edgebar{display:none;flex-wrap:wrap;gap:8px;align-items:center;padding:2px 0;}
 .edgebar.show{display:flex;}
 .eblabel{font-size:11px;color:var(--ink2);}
