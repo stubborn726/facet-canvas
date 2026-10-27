@@ -14,6 +14,7 @@ let canvases=[], canvasId=localStorage.getItem('fc_canvas')||'';   // 多画布�
 let drag=null;   // {type:'node'|'col', id}
 let marq=null, suppressBgClick=false;   // 框选状态 / 抑制框选后误触发的背景点击
 let zoom=1, panX=0, panY=0, spaceDown=false, panDrag=null;   // 画布缩放/平移
+let viewSettleTimer=0, rasterZoom=1;   // 停手后重栅格化的定时器；rasterZoom = 当前位图对应的缩放比例
 let locked=false, expandedNotes=new Set();                   // 锁定画布（会话内）/ 备注展开态
 let showNotes=false;                                         // 「显示备注」总开关（用户意图，只有用户点击才改）
 let tagFilter=null, tagbarOpen=false;                        // 标签筛选（成员资格高亮，与节点选中链路互斥）/ 标签条展开态（会话内）
@@ -668,6 +669,7 @@ function updateRev(){ document.getElementById('rev').textContent='rev '+rev+' ·
 
 /* ===== 画布缩放 / 平移 ===== */
 const ZMIN=0.25, ZMAX=2.5;
+const VIEW_SETTLE_MS=200;    // 停手多久后重新栅格化：太短会在慢速滚轮的中途重绘（卡一下），太长则清晰得慢
 function clampPan(){                               // 约束平移：至少留 48px 内容可见，防止把画布拖丢
   const r=wrapEl.getBoundingClientRect();
   const availW=r.width-28, availH=r.height-24;     // .wrap 内边距 12px 14px
@@ -677,9 +679,19 @@ function clampPan(){                               // 约束平移：至少留 4
   panX = loX<=hiX ? Math.min(Math.max(panX,loX),hiX) : (availW-cw)/2;
   panY = loY<=hiY ? Math.min(Math.max(panY,loY),hiY) : (availH-ch)/2;
 }
+function settleRaster(){                               // 停手后：比例变了才重绘
+  if(zoom===rasterZoom) return;                       // 只平移过（位图比例没变）→ 保留合成层，重绘纯属白费
+  graphEl.classList.remove('transforming');           // 撤掉合成层 → 浏览器按当前比例整块重绘，文字变实
+  rasterZoom=zoom;
+}
 function applyView(){
   clampPan();
   graphEl.style.transform='translate('+panX+'px,'+panY+'px) scale('+zoom+')';
+  // 缩放是 transform 位图放大：合成层会复用旧比例的位图（拖动时流畅，但停手后仍糊）。
+  // 所以动的时候提升合成层，停手后交给 settleRaster 决定要不要按新比例重绘一次。
+  graphEl.classList.add('transforming');
+  clearTimeout(viewSettleTimer);
+  viewSettleTimer=setTimeout(settleRaster, VIEW_SETTLE_MS);
   const b=document.getElementById('btn-zoomreset'); if(b) b.textContent=Math.round(zoom*100)+'%';
 }
 function setZoom(z, cx, cy){                       // 以视口内某点(cx,cy，缺省=视口中心)为锚缩放

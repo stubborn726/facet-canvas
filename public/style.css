@@ -46,7 +46,8 @@ body{font-family:'Microsoft YaHei','微软雅黑',sans-serif;background:var(--bg
 .wrap{flex:1;min-height:0;overflow:hidden;position:relative;padding:12px 14px;}
 .wrap.pannable{cursor:grab;}
 .wrap.panning{cursor:grabbing;}
-.graph{position:relative;display:flex;gap:56px;align-items:flex-start;transform-origin:0 0;will-change:transform;}
+.graph{position:relative;display:flex;gap:56px;align-items:flex-start;transform-origin:0 0;}
+.graph.transforming{will-change:transform;}   /* 只在缩放/平移过程中提升为合成层；缩放停手后撤掉 → 按当前比例重绘，放大才不糊 */
 .graph.pan-mode .node,.graph.pan-mode .col-head,.graph.pan-mode .col-add,.graph.pan-mode .edge-hit{pointer-events:none;}
 .col{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;border-radius:var(--radius);transition:background .1s;}
 .col.dragover{background:var(--blue-bg);}
